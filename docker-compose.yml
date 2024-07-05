@@ -13,11 +13,7 @@ services:
       - 8080:8080
     secrets:
       - db-password
-    depends_on:
-      db:
-        condition: service_healthy
-    links:
-      - db
+      - supabase-service-key
   nginx:
     image: nginx:1.27.0-alpine
     container_name: edsistant-nginx 
@@ -34,28 +30,11 @@ services:
     volumes: 
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - web-root:/var/www/edsistant
-  db:
-    image: postgres:16.3-alpine3.20
-    container_name: edsistant-db
-    restart: always
-    user: postgres
-    secrets: 
-      - db-password
-    environment:
-      - POSTGRES_DB=edsistant
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-    expose:
-      - 5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD", "pg_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 volumes:
   web-root:
   pgdata:
 secrets:
   db-password:
     environment: "POSTGRES_PASSWORD"
+  supabase-service-key:
+    environment: "SUPABASE_KEY"
