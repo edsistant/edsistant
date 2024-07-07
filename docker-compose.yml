@@ -37,4 +37,4 @@ secrets:
   db-password:
     environment: "POSTGRES_PASSWORD"
   supabase-service-key:
-    environment: "SUPABASE_KEY"
+    environment: "SUPABASE_SERVICE_KEY"
