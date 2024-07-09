@@ -3,6 +3,9 @@ services:
     build: ./frontend
     container_name: edsistant-web
     restart: always
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_PUBLIC_KEY}
   backend:
     build: ./backend
     container_name: edsistant-api
@@ -26,21 +29,6 @@ services:
     volumes: 
       - ./nginx/conf.d/default.conf:/etc/nginx/templates/default.conf.template
       - web-root:/var/www/edsistant
-      - ./acmeout/edsistant.com/:/etc/nginx/ssl/live/edsistant.com/
-  acme.sh:
-    image: neilpang/acme.sh
-    container_name: acme.sh    
-    command: daemon
-    volumes:
-      - ./acmeout:/acme.sh
-      - /var/run/docker.sock:/var/run/docker.sock 
-    environment:
-      - DEPLOY_DOCKER_CONTAINER_LABEL=sh.acme.autoload.domain=edsistant.com
-      - DEPLOY_DOCKER_CONTAINER_KEY_FILE=/etc/nginx/ssl/live/edsistant.com/key.pem
-      - DEPLOY_DOCKER_CONTAINER_CERT_FILE="/etc/nginx/ssl/live/edsistant.com/cert.pem"
-      - DEPLOY_DOCKER_CONTAINER_CA_FILE="/etc/nginx/ssl/live/edsistant.com/ca.pem"
-      - DEPLOY_DOCKER_CONTAINER_FULLCHAIN_FILE="/etc/nginx/ssl/live/edsistant.com/full.pem"
-      - DEPLOY_DOCKER_CONTAINER_RELOAD_CMD="service nginx force-reload"
 volumes:
   web-root:
     external: true
