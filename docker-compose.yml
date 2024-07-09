@@ -11,9 +11,8 @@ services:
     restart: always
     ports:
       - 8080:8080
-    secrets:
-      - db-password
-      - supabase-service-key
+    environment:
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
   certbot:
     image: certbot/certbot:latest
     volumes:
@@ -42,9 +41,3 @@ services:
       - ./certbot/www/:/var/www/certbot/:ro
 volumes:
   web-root:
-  pgdata:
-secrets:
-  db-password:
-    environment: "POSTGRES_PASSWORD"
-  supabase-service-key:
-    environment: "SUPABASE_SERVICE_KEY"
