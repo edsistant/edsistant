@@ -14,10 +14,19 @@ services:
     secrets:
       - db-password
       - supabase-service-key
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+    environment:
+      - URL=${SITE_URL}
   nginx:
     image: nginx:1.27.0-alpine
     container_name: edsistant-nginx 
     restart: always
+    environment:
+      - URL=${SITE_URL}
     ports: 
       - 80:80
       - 443:443
@@ -30,6 +39,7 @@ services:
     volumes: 
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - web-root:/var/www/edsistant
+      - ./certbot/www/:/var/www/certbot/:ro
 volumes:
   web-root:
   pgdata:
