@@ -10,7 +10,7 @@ services:
     container_name: edsistant-api
     restart: always
     ports:
-      - 8080:8080
+      - 8090:8080
     environment:
       - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
   certbot:
