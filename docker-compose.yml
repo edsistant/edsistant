@@ -33,6 +33,7 @@ services:
     volumes: 
       - ./nginx/conf.d/default.conf:/etc/nginx/templates/default.conf.template
       - web-root:/var/www/edsistant
+      - ./acmeout/edsistant.com/:/etc/nginx/ssl/live/edsistant.com/
   acme.sh:
     image: neilpang/acme.sh
     container_name: acme.sh    
