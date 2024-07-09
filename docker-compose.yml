@@ -13,13 +13,6 @@ services:
       - 8090:8080
     environment:
       - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
-    environment:
-      - URL=${SITE_URL}
   nginx:
     image: nginx:1.27.0-alpine
     container_name: edsistant-nginx 
@@ -38,7 +31,20 @@ services:
     volumes: 
       - ./nginx/conf.d/default.conf:/etc/nginx/templates/default.conf.template
       - web-root:/var/www/edsistant
-      - ./certbot/www/:/var/www/certbot/:ro
+  acme.sh:
+    image: neilpang/acme.sh
+    container_name: acme.sh    
+    command: daemon
+    volumes:
+      - ./acmeout:/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock 
+    environment:
+      - DEPLOY_DOCKER_CONTAINER_LABEL=sh.acme.autoload.domain=edsistant.com
+      - DEPLOY_DOCKER_CONTAINER_KEY_FILE=/etc/nginx/ssl/live/edsistant.com/key.pem
+      - DEPLOY_DOCKER_CONTAINER_CERT_FILE="/etc/nginx/ssl/live/edsistant.com/cert.pem"
+      - DEPLOY_DOCKER_CONTAINER_CA_FILE="/etc/nginx/ssl/live/edsistant.com/ca.pem"
+      - DEPLOY_DOCKER_CONTAINER_FULLCHAIN_FILE="/etc/nginx/ssl/live/edsistant.com/full.pem"
+      - DEPLOY_DOCKER_CONTAINER_RELOAD_CMD="service nginx force-reload"
 volumes:
   web-root:
     external: true
