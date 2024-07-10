@@ -6,6 +6,8 @@ services:
     environment:
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_KEY=${SUPABASE_PUBLIC_KEY}
+      - NUXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}
+      - NUXT_PUBLIC_SUPABASE_KEY=${SUPABASE_PUBLIC_KEY}
   backend:
     build: ./backend
     container_name: edsistant-api
